@@ -7,11 +7,14 @@ import {
   ListSubheader,
 } from '@mui/material'
 import TextSnippetIcon from '@mui/icons-material/TextSnippet'
+import AddIcon from '@mui/icons-material/Add'
 import { useSideMenuState } from './state'
 import RouterLink from '../RouterLink'
+import { useNewDocumentFormState } from '../NewDocumentForm/state'
 
 const SideMenu = () => {
   const { isOpen, closeMenu } = useSideMenuState()
+  const openNewDocumentForm = useNewDocumentFormState(state => state.openForm)
 
   return (
     <Drawer anchor="left" open={isOpen} onClose={closeMenu}>
@@ -20,6 +23,12 @@ const SideMenu = () => {
         sx={{ width: 260, bgcolor: 'background.paper' }}
         subheader={<ListSubheader>Navigate to:</ListSubheader>}
       >
+        <ListItemButton onClick={openNewDocumentForm}>
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary="New Document" />
+        </ListItemButton>
         <ListItemButton LinkComponent={RouterLink} href="/">
           <ListItemIcon>
             <TextSnippetIcon />
