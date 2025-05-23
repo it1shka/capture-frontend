@@ -8,7 +8,11 @@ export const useNewDocumentForm = () => {
     },
     validators: {
       onChange: z.object({
-        documentName: z.string(),
+        documentName: z
+          .string()
+          .trim()
+          .min(4, 'Title should be at least 4 characters long')
+          .max(35, 'Title should be at most 35 characters long'),
       }),
     },
     onSubmit: ({ value }) => {

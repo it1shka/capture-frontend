@@ -4,11 +4,13 @@ import {
   Dialog,
   FormControl,
   InputLabel,
-  OutlinedInput,
+  TextField,
+  Tooltip,
   Typography,
 } from '@mui/material'
 import { useNewDocumentFormState } from './state'
 import { useNewDocumentForm } from './form'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
 const NewDocumentForm = () => {
   const { isOpen, closeForm } = useNewDocumentFormState()
@@ -40,22 +42,27 @@ const NewDocumentForm = () => {
         <form.Field
           name="documentName"
           children={field => {
+            console.log(field.state.meta.errors)
             return (
-              <FormControl fullWidth variant="outlined" size="small">
-                <InputLabel>Document name</InputLabel>
-                <OutlinedInput
-                  id={field.name}
-                  name={field.name}
-                  label="Document name"
-                  placeholder="Document name: "
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={event => {
-                    field.handleChange(event.target.value)
-                  }}
-                  error={!field.state.meta.isValid}
-                />
-              </FormControl>
+              <TextField
+                size="small"
+                fullWidth
+                label="Document name"
+                placeholder="Document name: "
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={event => {
+                  field.handleChange(event.target.value)
+                }}
+                error={!field.state.meta.isValid}
+                helperText={
+                  field.state.meta.isValid
+                    ? undefined
+                    : field.state.meta.errors[0]?.message
+                }
+              />
             )
           }}
         />
@@ -63,16 +70,26 @@ const NewDocumentForm = () => {
           <form.Subscribe
             selector={state => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <>
-                <Button type="submit" variant="contained" disabled={!canSubmit}>
-                  Create
-                </Button>
-              </>
+              // TODO: use LoadingButton instead
+              <Button type="submit" variant="contained" disabled={!canSubmit}>
+                Create
+              </Button>
             )}
           />
-          <Button onClick={closeForm} sx={{ mr: 2 }} variant="outlined">
+          <Button onClick={closeForm} variant="outlined">
             Cancel
           </Button>
+          {/* TODO: */}
+          <Tooltip title="Suggest title based on description">
+            <Button
+              disabled
+              variant="outlined"
+              color="secondary"
+              endIcon={<HelpOutlineIcon />}
+            >
+              Suggest
+            </Button>
+          </Tooltip>
         </Box>
       </Box>
     </Dialog>
