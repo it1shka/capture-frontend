@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { useSideMenuState } from './state'
 import RouterLink from '../RouterLink'
 import { useNewDocumentFormState } from '../NewDocumentForm/state'
+import DocumentSearch from './DocumentSearch'
 
 const SideMenu = () => {
   const { isOpen, closeMenu } = useSideMenuState()
@@ -39,6 +40,7 @@ const SideMenu = () => {
           sx={{ width: '100%', bgcolor: 'background.paper' }}
           subheader={<ListSubheader>Recent documents:</ListSubheader>}
         ></List>
+        <DocumentSearch />
       </List>
     </Drawer>
   )
