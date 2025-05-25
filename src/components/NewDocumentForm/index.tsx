@@ -2,8 +2,6 @@ import {
   Box,
   Button,
   Dialog,
-  FormControl,
-  InputLabel,
   TextField,
   Tooltip,
   Typography,
@@ -69,7 +67,7 @@ const NewDocumentForm = () => {
         <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
           <form.Subscribe
             selector={state => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
+            children={([canSubmit /* isSubmitting */]) => (
               // TODO: use LoadingButton instead
               <Button type="submit" variant="contained" disabled={!canSubmit}>
                 Create

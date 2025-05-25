@@ -1,12 +1,12 @@
 import { create } from 'zustand'
 
-type SideMenuState = {
+interface SideMenuState {
   isOpen: boolean
   search: string
-  openMenu(): void
-  closeMenu(): void
-  setSearch(newSearch: string): void
-  clearSearch(): void
+  openMenu: () => void
+  closeMenu: () => void
+  setSearch: (newSearch: string) => void
+  clearSearch: () => void
 }
 
 export const useSideMenuState = create<SideMenuState>(set => ({

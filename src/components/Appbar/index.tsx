@@ -1,6 +1,7 @@
-import { AppBar, IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import { useSideMenuState } from '../SideMenu/state'
+import ProfileInfo from './ProfileInfo'
 
 const Appbar = () => {
   const openMenu = useSideMenuState(state => state.openMenu)
@@ -20,6 +21,10 @@ const Appbar = () => {
         <Typography variant="h6" color="inherit" component="div">
           Capture
         </Typography>
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        <ProfileInfo />
       </Toolbar>
     </AppBar>
   )
