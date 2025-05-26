@@ -2,8 +2,8 @@ import { create } from 'zustand'
 
 interface NewDocumentFormState {
   isOpen: boolean
-  openForm(): void
-  closeForm(): void
+  openForm: () => void
+  closeForm: () => void
 }
 
 export const useNewDocumentFormState = create<NewDocumentFormState>(set => ({

@@ -12,6 +12,7 @@ import { useSideMenuState } from './state'
 import RouterLink from '../RouterLink'
 import { useNewDocumentFormState } from '../NewDocumentForm/state'
 import DocumentSearch from './DocumentSearch'
+import LogoutButton from './LogoutButton'
 
 const SideMenu = () => {
   const { isOpen, closeMenu } = useSideMenuState()
@@ -36,6 +37,7 @@ const SideMenu = () => {
           </ListItemIcon>
           <ListItemText primary="All Documents" />
         </ListItemButton>
+        <LogoutButton />
         <List
           sx={{ width: '100%', bgcolor: 'background.paper' }}
           subheader={<ListSubheader>Recent documents:</ListSubheader>}
