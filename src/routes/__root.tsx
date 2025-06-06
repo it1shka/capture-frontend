@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { CssBaseline } from '@mui/material'
+import { CssBaseline, Stack } from '@mui/material'
 import Appbar from '../components/Appbar'
 import SideMenu from '../components/SideMenu'
 import NewDocumentForm from '../components/NewDocumentForm'
@@ -10,11 +10,13 @@ export const Route = createRootRoute({
   component: () => {
     return (
       <>
-        <Appbar />
         <SideMenu />
         <ConfirmDialog />
         <NewDocumentForm />
-        <Outlet />
+        <Stack direction="column" width="100vw" height="100vh">
+          <Appbar />
+          <Outlet />
+        </Stack>
         <CssBaseline />
         <TanStackRouterDevtools />
       </>
