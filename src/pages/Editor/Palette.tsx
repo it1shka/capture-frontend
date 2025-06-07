@@ -1,20 +1,70 @@
-import { Box, Button, Stack } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+} from '@mui/material'
 import { useState } from 'react'
 import { SketchPicker } from 'react-color'
-import { useEditorState } from './state'
+import { MAX_STROKE_WIDTH, MIN_STROKE_WIDTH, useEditorState } from './state'
 
 const Palette = () => {
   const [openColor, setOpenColor] = useState(false)
-  const { brushColor, setBrushColor } = useEditorState()
+  const {
+    brushColor,
+    strokeWidth,
+    tool,
+    setBrushColor,
+    setStrokeWidth,
+    setTool,
+  } = useEditorState()
 
   return (
-    <Stack direction="row" padding={0.5}>
+    <Stack direction="row" padding={1} gap={1} alignItems="center">
+      <FormControl size="small" sx={{ minWidth: 120 }}>
+        <InputLabel id="tool-label">Tool</InputLabel>
+        <Select
+          labelId="tool-label"
+          label="Tool"
+          value={tool}
+          onChange={event => {
+            const { value } = event.target
+            setTool(value)
+          }}
+        >
+          <MenuItem value="pen">Pen</MenuItem>
+          <MenuItem value="eraser">Eraser</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl size="small" sx={{ minWidth: 120 }}>
+        <InputLabel id="stroke-width-label">Width</InputLabel>
+        <Select
+          labelId="stroke-width-label"
+          label="Width"
+          value={strokeWidth}
+          onChange={event => {
+            setStrokeWidth(event.target.value)
+          }}
+        >
+          {Array(MAX_STROKE_WIDTH - MIN_STROKE_WIDTH + 1)
+            .fill(null)
+            .map((_, index) => (
+              <MenuItem key={index} value={index + MIN_STROKE_WIDTH}>
+                {index + MIN_STROKE_WIDTH}
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+
       <Box position="relative">
         <Button
           onClick={() => {
             setOpenColor(prev => !prev)
           }}
-          size="small"
           variant="outlined"
           endIcon={
             <Box
