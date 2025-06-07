@@ -15,6 +15,11 @@ const ConfirmDialog = () => {
   const message = config?.message ?? 'This action cannot be undone'
   const action = config?.action ?? closeConfirmDialog
 
+  const handleAgree = () => {
+    action()
+    closeConfirmDialog()
+  }
+
   return (
     <Dialog open={isOpen} onClose={closeConfirmDialog}>
       <DialogTitle>{title}</DialogTitle>
@@ -25,7 +30,7 @@ const ConfirmDialog = () => {
         <Button variant="outlined" onClick={closeConfirmDialog}>
           Cancel
         </Button>
-        <Button color="error" onClick={action} variant="contained">
+        <Button color="error" onClick={handleAgree} variant="contained">
           OK
         </Button>
       </DialogActions>
