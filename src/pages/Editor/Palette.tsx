@@ -9,7 +9,9 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { SketchPicker } from 'react-color'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { MAX_STROKE_WIDTH, MIN_STROKE_WIDTH, useEditorState } from './state'
+import { useConfirmDialogState } from '../../components/ConfirmDialog/state'
 
 const Palette = () => {
   const [openColor, setOpenColor] = useState(false)
@@ -20,7 +22,17 @@ const Palette = () => {
     setBrushColor,
     setStrokeWidth,
     setTool,
+    eraseLines,
   } = useEditorState()
+
+  const { openConfirmDialog } = useConfirmDialogState()
+  const handleErase = () => {
+    openConfirmDialog({
+      title: 'Are you sure you want to clean the canvas?',
+      message: 'This action cannot be undone',
+      action: eraseLines,
+    })
+  }
 
   return (
     <Stack direction="row" padding={1} gap={1} alignItems="center">
@@ -96,6 +108,15 @@ const Palette = () => {
           </Box>
         )}
       </Box>
+
+      <Button
+        onClick={handleErase}
+        variant="outlined"
+        color="error"
+        endIcon={<DeleteOutlineIcon />}
+      >
+        Erase
+      </Button>
     </Stack>
   )
 }
