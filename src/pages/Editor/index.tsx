@@ -1,6 +1,8 @@
-import { Box, Paper, Stack } from '@mui/material'
+import { Box, Divider, Paper, Stack } from '@mui/material'
 import { Resizable } from 're-resizable'
 import TextEditor from './TextEditor'
+import VisualCanvas from './VisualCanvas'
+import Palette from './Palette'
 
 const Editor = () => {
   return (
@@ -15,7 +17,13 @@ const Editor = () => {
       >
         <Box sx={{ width: '100%', height: '100%', p: 2 }}>
           <Paper sx={{ width: '100%', height: '100%' }} elevation={3}>
-            {/* TODO: add canvas drawing tool */}
+            <Stack sx={{ width: '100%', height: '100%' }} direction="column">
+              <Palette />
+              <Divider />
+              <Box flex={1}>
+                <VisualCanvas />
+              </Box>
+            </Stack>
           </Paper>
         </Box>
       </Resizable>
