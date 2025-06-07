@@ -1,12 +1,13 @@
 import { Layer, Line, Stage } from 'react-konva'
 import Konva from 'konva'
 import SizeTracker from '../../components/SizeTracker'
-import { useEditorState } from './state'
+import { useEditorState, useEditorStateComputedProps } from './state'
 import { useRef } from 'react'
 
 const VisualCanvas = () => {
-  const { lines, brushColor, strokeWidth, tool, addLine, updateLine } =
+  const { brushColor, strokeWidth, tool, addLine, updateLine } =
     useEditorState()
+  const { activeLines, lastLine } = useEditorStateComputedProps()
 
   const isDrawing = useRef(false)
 
@@ -30,7 +31,7 @@ const VisualCanvas = () => {
   }
 
   const handleMouseMove = (event: Konva.KonvaEventObject<MouseEvent>) => {
-    if (!isDrawing.current || lines.length <= 0) {
+    if (!isDrawing.current || lastLine === null) {
       return
     }
     const stage = event.target.getStage()
@@ -42,7 +43,6 @@ const VisualCanvas = () => {
       return
     }
     const { x, y } = position
-    const lastLine = lines[lines.length - 1]
     updateLine({
       ...lastLine,
       points: [...lastLine.points, x, y],
@@ -59,12 +59,21 @@ const VisualCanvas = () => {
         <Stage
           width={width}
           height={height}
-          onMouseDown={handleMouseDown}
-          onMousemove={handleMouseMove}
-          onMouseup={handleMouseUp}
+          onMouseDown={event => {
+            // TODO: for some reason, when you directly pass
+            // TODO: the function, it gets called twice
+            // TODO: therefore, we additionally wrap it in another function
+            handleMouseDown(event)
+          }}
+          onMouseMove={event => {
+            handleMouseMove(event)
+          }}
+          onMouseUp={() => {
+            handleMouseUp()
+          }}
         >
           <Layer>
-            {lines.map(({ points, color, width, tool }, index) => {
+            {activeLines.map(({ points, color, width, tool }, index) => {
               return (
                 <Line
                   key={index}

@@ -10,7 +10,14 @@ import {
 import { useState } from 'react'
 import { SketchPicker } from 'react-color'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import { MAX_STROKE_WIDTH, MIN_STROKE_WIDTH, useEditorState } from './state'
+import UndoIcon from '@mui/icons-material/Undo'
+import RedoIcon from '@mui/icons-material/Redo'
+import {
+  MAX_STROKE_WIDTH,
+  MIN_STROKE_WIDTH,
+  useEditorState,
+  useEditorStateComputedProps,
+} from './state'
 import { useConfirmDialogState } from '../../components/ConfirmDialog/state'
 
 const Palette = () => {
@@ -23,7 +30,11 @@ const Palette = () => {
     setStrokeWidth,
     setTool,
     eraseLines,
+    undoLine,
+    redoLine,
   } = useEditorState()
+
+  const { canUndo, canRedo } = useEditorStateComputedProps()
 
   const { openConfirmDialog } = useConfirmDialogState()
   const handleErase = () => {
@@ -108,6 +119,24 @@ const Palette = () => {
           </Box>
         )}
       </Box>
+
+      <Button
+        onClick={undoLine}
+        variant="outlined"
+        disabled={!canUndo}
+        endIcon={<UndoIcon />}
+      >
+        Undo
+      </Button>
+
+      <Button
+        onClick={redoLine}
+        variant="outlined"
+        disabled={!canRedo}
+        endIcon={<RedoIcon />}
+      >
+        Redo
+      </Button>
 
       <Button
         onClick={handleErase}

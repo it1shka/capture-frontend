@@ -14,7 +14,8 @@ interface EditorVars {
   brushColor: string
   strokeWidth: number
   tool: Tool
-  lines: Line[]
+  history: Line[]
+  historyPointer: number
 }
 
 interface EditorActions {
@@ -25,6 +26,8 @@ interface EditorActions {
   addLine: (newLine: Line) => void
   updateLine: (updatedLine: Line) => void
   eraseLines: () => void
+  undoLine: () => void
+  redoLine: () => void
 }
 
 type EditorState = EditorVars & EditorActions
@@ -37,7 +40,8 @@ const initialState = {
   brushColor: '#0f0f0f',
   strokeWidth: 5,
   tool: 'pen',
-  lines: [],
+  history: [],
+  historyPointer: 0,
 } satisfies EditorVars
 
 export const useEditorState = create<EditorState>(set => ({
@@ -69,18 +73,22 @@ export const useEditorState = create<EditorState>(set => ({
   },
 
   addLine: newLine => {
-    set(prev => ({
-      ...prev,
-      lines: [...prev.lines, newLine],
-    }))
+    set(prev => {
+      const activeHistory = prev.history.slice(0, prev.historyPointer)
+      return {
+        ...prev,
+        history: [...activeHistory, newLine],
+        historyPointer: prev.historyPointer + 1,
+      }
+    })
   },
 
   updateLine: updatedLine => {
     set(prev => {
-      const preserve = prev.lines.slice(0, prev.lines.length - 1)
+      const preserve = prev.history.slice(0, prev.history.length - 1)
       return {
         ...prev,
-        lines: [...preserve, updatedLine],
+        history: [...preserve, updatedLine],
       }
     })
   },
@@ -88,7 +96,38 @@ export const useEditorState = create<EditorState>(set => ({
   eraseLines: () => {
     set(prev => ({
       ...prev,
-      lines: [],
+      history: [],
+      historyPointer: 0,
+    }))
+  },
+
+  undoLine: () => {
+    set(prev => ({
+      ...prev,
+      historyPointer: Math.max(0, prev.historyPointer - 1),
+    }))
+  },
+
+  redoLine: () => {
+    set(prev => ({
+      ...prev,
+      historyPointer: Math.min(prev.history.length, prev.historyPointer + 1),
     }))
   },
 }))
+
+export const useEditorStateComputedProps = () => {
+  const { history, historyPointer } = useEditorState()
+
+  const activeLines = history.slice(0, historyPointer)
+  const canUndo = historyPointer > 0
+  const canRedo = historyPointer < history.length
+  const lastLine = history.length > 0 ? history[history.length - 1] : null
+
+  return {
+    activeLines,
+    canUndo,
+    canRedo,
+    lastLine,
+  } as const
+}
