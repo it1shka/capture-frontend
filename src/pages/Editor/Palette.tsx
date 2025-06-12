@@ -6,6 +6,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  Tooltip,
 } from '@mui/material'
 import { useState } from 'react'
 import { SketchPicker } from 'react-color'
@@ -17,8 +18,8 @@ import {
   MIN_STROKE_WIDTH,
   useEditorState,
   useEditorStateComputedProps,
+  useEraseLinesWithConfirmation,
 } from './state'
-import { useConfirmDialogState } from '../../components/ConfirmDialog/state'
 
 const Palette = () => {
   const [openColor, setOpenColor] = useState(false)
@@ -29,21 +30,13 @@ const Palette = () => {
     setBrushColor,
     setStrokeWidth,
     setTool,
-    eraseLines,
     undoLine,
     redoLine,
   } = useEditorState()
 
   const { canUndo, canRedo } = useEditorStateComputedProps()
 
-  const { openConfirmDialog } = useConfirmDialogState()
-  const handleErase = () => {
-    openConfirmDialog({
-      title: 'Are you sure you want to clean the canvas?',
-      message: 'This action cannot be undone',
-      action: eraseLines,
-    })
-  }
+  const handleErase = useEraseLinesWithConfirmation()
 
   return (
     <Stack direction="row" padding={1} gap={1} alignItems="center">
@@ -120,32 +113,38 @@ const Palette = () => {
         )}
       </Box>
 
-      <Button
-        onClick={undoLine}
-        variant="outlined"
-        disabled={!canUndo}
-        endIcon={<UndoIcon />}
-      >
-        Undo
-      </Button>
+      <Tooltip title="Ctrl+Z">
+        <Button
+          onClick={undoLine}
+          variant="outlined"
+          disabled={!canUndo}
+          endIcon={<UndoIcon />}
+        >
+          Undo
+        </Button>
+      </Tooltip>
 
-      <Button
-        onClick={redoLine}
-        variant="outlined"
-        disabled={!canRedo}
-        endIcon={<RedoIcon />}
-      >
-        Redo
-      </Button>
+      <Tooltip title="Ctrl+U">
+        <Button
+          onClick={redoLine}
+          variant="outlined"
+          disabled={!canRedo}
+          endIcon={<RedoIcon />}
+        >
+          Redo
+        </Button>
+      </Tooltip>
 
-      <Button
-        onClick={handleErase}
-        variant="outlined"
-        color="error"
-        endIcon={<DeleteOutlineIcon />}
-      >
-        Erase
-      </Button>
+      <Tooltip title="Ctrl+X">
+        <Button
+          onClick={handleErase}
+          variant="outlined"
+          color="error"
+          endIcon={<DeleteOutlineIcon />}
+        >
+          Erase
+        </Button>
+      </Tooltip>
     </Stack>
   )
 }

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { useConfirmDialogState } from '../../components/ConfirmDialog/state'
 
 export type Tool = 'pen' | 'eraser'
 
@@ -130,4 +131,19 @@ export const useEditorStateComputedProps = () => {
     canRedo,
     lastLine,
   } as const
+}
+
+export const useEraseLinesWithConfirmation = () => {
+  const eraseLines = useEditorState(store => store.eraseLines)
+  const openConfirmDialog = useConfirmDialogState(
+    store => store.openConfirmDialog,
+  )
+
+  return () => {
+    openConfirmDialog({
+      title: 'Are you sure you want to clean the canvas?',
+      message: 'This action cannot be undone',
+      action: eraseLines,
+    })
+  }
 }

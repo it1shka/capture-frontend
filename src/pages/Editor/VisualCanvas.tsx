@@ -1,8 +1,12 @@
 import { Layer, Line, Stage } from 'react-konva'
 import Konva from 'konva'
-import SizeTracker from '../../components/SizeTracker'
-import { useEditorState, useEditorStateComputedProps } from './state'
 import { useRef } from 'react'
+import SizeTracker from '../../components/SizeTracker'
+import {
+  useEditorState,
+  useEditorStateComputedProps,
+  useEraseLinesWithConfirmation,
+} from './state'
 import KeyListener from '../../components/KeyListener'
 
 const VisualCanvas = () => {
@@ -61,11 +65,14 @@ const VisualCanvas = () => {
     isDrawing.current = false
   }
 
+  const eraseLines = useEraseLinesWithConfirmation()
+
   return (
     <KeyListener
       hotkeys={{
         'meta+z.prevent.stop': undoLine,
         'meta+u.prevent.stop': redoLine,
+        'meta+x.prevent.stop': eraseLines,
       }}
     >
       <SizeTracker>
