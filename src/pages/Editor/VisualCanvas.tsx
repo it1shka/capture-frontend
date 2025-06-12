@@ -3,10 +3,18 @@ import Konva from 'konva'
 import SizeTracker from '../../components/SizeTracker'
 import { useEditorState, useEditorStateComputedProps } from './state'
 import { useRef } from 'react'
+import KeyListener from '../../components/KeyListener'
 
 const VisualCanvas = () => {
-  const { brushColor, strokeWidth, tool, addLine, updateLine } =
-    useEditorState()
+  const {
+    brushColor,
+    strokeWidth,
+    tool,
+    addLine,
+    updateLine,
+    undoLine,
+    redoLine,
+  } = useEditorState()
   const { activeLines, lastLine } = useEditorStateComputedProps()
 
   const isDrawing = useRef(false)
@@ -54,45 +62,52 @@ const VisualCanvas = () => {
   }
 
   return (
-    <SizeTracker>
-      {({ width, height }) => (
-        <Stage
-          width={width}
-          height={height}
-          onMouseDown={event => {
-            // TODO: for some reason, when you directly pass
-            // TODO: the function, it gets called twice
-            // TODO: therefore, we additionally wrap it in another function
-            handleMouseDown(event)
-          }}
-          onMouseMove={event => {
-            handleMouseMove(event)
-          }}
-          onMouseUp={() => {
-            handleMouseUp()
-          }}
-        >
-          <Layer>
-            {activeLines.map(({ points, color, width, tool }, index) => {
-              return (
-                <Line
-                  key={index}
-                  points={points}
-                  stroke={color}
-                  strokeWidth={width}
-                  tension={0.5}
-                  lineCap="round"
-                  lineJoin="round"
-                  globalCompositeOperation={
-                    tool === 'eraser' ? 'destination-out' : 'source-over'
-                  }
-                />
-              )
-            })}
-          </Layer>
-        </Stage>
-      )}
-    </SizeTracker>
+    <KeyListener
+      hotkeys={{
+        'meta+z.prevent.stop': undoLine,
+        'meta+u.prevent.stop': redoLine,
+      }}
+    >
+      <SizeTracker>
+        {({ width, height }) => (
+          <Stage
+            width={width}
+            height={height}
+            onMouseDown={event => {
+              // TODO: for some reason, when you directly pass
+              // TODO: the function, it gets called twice
+              // TODO: therefore, we additionally wrap it in another function
+              handleMouseDown(event)
+            }}
+            onMouseMove={event => {
+              handleMouseMove(event)
+            }}
+            onMouseUp={() => {
+              handleMouseUp()
+            }}
+          >
+            <Layer>
+              {activeLines.map(({ points, color, width, tool }, index) => {
+                return (
+                  <Line
+                    key={index}
+                    points={points}
+                    stroke={color}
+                    strokeWidth={width}
+                    tension={0.5}
+                    lineCap="round"
+                    lineJoin="round"
+                    globalCompositeOperation={
+                      tool === 'eraser' ? 'destination-out' : 'source-over'
+                    }
+                  />
+                )
+              })}
+            </Layer>
+          </Stage>
+        )}
+      </SizeTracker>
+    </KeyListener>
   )
 }
 
