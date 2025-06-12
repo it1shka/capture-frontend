@@ -40,7 +40,6 @@ const NewDocumentForm = () => {
         <form.Field
           name="documentName"
           children={field => {
-            console.log(field.state.meta.errors)
             return (
               <TextField
                 size="small"
