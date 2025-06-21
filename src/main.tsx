@@ -11,6 +11,7 @@ import { WebStorageStateStore } from 'oidc-client-ts'
 import AuthLoading from './pages/auth/AuthLoading'
 import AuthError from './pages/auth/AuthError'
 import AuthFailed from './pages/auth/AuthFailed'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const router = createRouter({ routeTree })
 
 declare module '@tanstack/react-router' {
@@ -26,6 +27,8 @@ const oidcConfig = Object.freeze({
   post_logout_redirect_uri: window.location.origin,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
 })
+
+const queryClient = new QueryClient()
 
 const AuthWrapper = () => {
   const { isLoading, isAuthenticated, error } = useAutoSignin({
@@ -55,9 +58,11 @@ if (rootElement.innerHTML === '') {
   const root = createRoot(rootElement)
   root.render(
     <StrictMode>
-      <AuthProvider {...oidcConfig}>
-        <AuthWrapper />
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider {...oidcConfig}>
+          <AuthWrapper />
+        </AuthProvider>
+      </QueryClientProvider>
     </StrictMode>,
   )
 }

@@ -1,7 +1,8 @@
 import {
   Box,
-  Button,
   Dialog,
+  Button,
+  Stack,
   TextField,
   Tooltip,
   Typography,
@@ -22,7 +23,9 @@ const NewDocumentForm = () => {
       aria-labelledby="New Document"
       aria-describedby="Form for creation of a new document"
     >
-      <Box
+      <Stack
+        direction="column"
+        gap={2}
         sx={{
           p: 3,
           width: 400,
@@ -63,12 +66,43 @@ const NewDocumentForm = () => {
             )
           }}
         />
+        <form.Field
+          name="documentDescription"
+          children={field => {
+            return (
+              <TextField
+                size="small"
+                multiline
+                fullWidth
+                label="Document description (optional)"
+                placeholder="Document description: "
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={event => {
+                  field.handleChange(event.target.value)
+                }}
+                error={!field.state.meta.isValid}
+                helperText={
+                  field.state.meta.isValid
+                    ? undefined
+                    : field.state.meta.errors[0]?.message
+                }
+              />
+            )
+          }}
+        />
         <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
           <form.Subscribe
             selector={state => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit /* isSubmitting */]) => (
-              // TODO: use LoadingButton instead
-              <Button type="submit" variant="contained" disabled={!canSubmit}>
+            children={([canSubmit, isSubmitting]) => (
+              <Button
+                type="submit"
+                loading={isSubmitting}
+                variant="contained"
+                disabled={!canSubmit}
+              >
                 Create
               </Button>
             )}
@@ -88,7 +122,7 @@ const NewDocumentForm = () => {
             </Button>
           </Tooltip>
         </Box>
-      </Box>
+      </Stack>
     </Dialog>
   )
 }
