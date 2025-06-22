@@ -12,6 +12,8 @@ import type { DocumentCardProps } from './types'
 import { formatDate } from '../../lib'
 import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
 import RouterLink from '../RouterLink'
+import { useDeleteDocumentMutation } from '../../queries/deleteDocument'
+import { useConfirmDialogState } from '../ConfirmDialog/state'
 
 const DocumentCard = ({ document }: DocumentCardProps) => {
   const { data: permission, isPending: isPermissionPending } =
@@ -28,6 +30,22 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
       default:
         return 'default'
     }
+  }
+
+  const { mutate, isPending } = useDeleteDocumentMutation()
+  const handleDelete = () => {
+    mutate(document.id)
+  }
+
+  const openConfirmDialog = useConfirmDialogState(
+    store => store.openConfirmDialog,
+  )
+  const handleCarefullyDelete = () => {
+    openConfirmDialog({
+      title: 'Are you sure?',
+      message: 'Your document will be deleted permanently',
+      action: handleDelete,
+    })
   }
 
   return (
@@ -88,7 +106,13 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
         <Button LinkComponent={RouterLink} href={`/editor/${document.id}`}>
           Edit
         </Button>
-        <Button color="error">Delete</Button>
+        <Button
+          color="error"
+          loading={isPending}
+          onClick={handleCarefullyDelete}
+        >
+          Delete
+        </Button>
       </CardActions>
     </Card>
   )
