@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 export const stringToColor = (string: string) => {
   let hash = 0
   let i
@@ -23,4 +25,28 @@ export const stringAvatar = (name: string) => {
     },
     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
   }
+}
+
+export const useDebounce = <T>(value: T, delay: number): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
+
+export const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
 }

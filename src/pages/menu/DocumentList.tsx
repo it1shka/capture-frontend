@@ -1,5 +1,7 @@
-import { Alert, Box, Stack, Tab, Tabs } from '@mui/material'
+import { Box, Stack, Tab, Tabs } from '@mui/material'
 import { useMenuState, type MenuTab } from './state'
+import GeneralList from './GeneralList'
+import RecentList from './RecentList'
 
 const isMenuTab = (maybeTab: unknown): maybeTab is MenuTab => {
   return (
@@ -27,14 +29,9 @@ const DocumentList = () => {
         </Tabs>
       </Box>
 
-      <Stack
-        mt={4}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Alert severity="info">No documents found</Alert>
-      </Stack>
+      {tab === 'all' && <GeneralList />}
+
+      {tab === 'recent' && <RecentList />}
     </Stack>
   )
 }
