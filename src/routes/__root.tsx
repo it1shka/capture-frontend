@@ -6,6 +6,7 @@ import SideMenu from '../components/SideMenu'
 import NewDocumentForm from '../components/NewDocumentForm'
 import ConfirmDialog from '../components/ConfirmDialog'
 import { useApiClientTokenSync } from '../queries/apiClient'
+import TokenDialog from '../components/TokenDialog'
 
 export const Route = createRootRoute({
   component: () => {
@@ -15,6 +16,7 @@ export const Route = createRootRoute({
       <>
         <SideMenu />
         <ConfirmDialog />
+        <TokenDialog />
         <NewDocumentForm />
         <Stack direction="column" width="100vw" height="100vh">
           <Appbar />

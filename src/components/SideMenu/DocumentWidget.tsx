@@ -12,6 +12,7 @@ import { useGetDocumentQuery } from '../../queries/getDocument'
 import KeyIcon from '@mui/icons-material/Key'
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle'
 import { useGenerateTokenMutation } from '../../queries/generateToken'
+import { useTokenDialogState } from '../TokenDialog/state'
 
 interface DocumentWidgetProps {
   documentId: string
@@ -23,6 +24,8 @@ const DocumentWidget = ({ documentId }: DocumentWidgetProps) => {
   const { mutateAsync: generateToken, isPending: tokenPending } =
     useGenerateTokenMutation()
 
+  const openTokenDialog = useTokenDialogState(store => store.openTokenDialog)
+
   const handleGenerateToken = (role: 'EDITOR' | 'VIEWER') => {
     if (document === undefined) {
       return
@@ -30,7 +33,7 @@ const DocumentWidget = ({ documentId }: DocumentWidgetProps) => {
     generateToken({
       documentId: document.id,
       accessLevel: role,
-    }).then(console.log)
+    }).then(openTokenDialog)
   }
 
   return (
