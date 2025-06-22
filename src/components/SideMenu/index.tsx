@@ -1,5 +1,5 @@
 import {
-    Alert,
+  Alert,
   Drawer,
   List,
   ListItemButton,
@@ -43,9 +43,7 @@ const SideMenu = () => {
           sx={{ width: '100%', bgcolor: 'background.paper' }}
           subheader={<ListSubheader>Recent documents:</ListSubheader>}
         >
-          <Alert severity="warning">
-            Coming Soon!
-          </Alert>
+          <Alert severity="warning">Coming Soon!</Alert>
         </List>
         <DocumentSearch />
       </List>
