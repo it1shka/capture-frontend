@@ -76,7 +76,6 @@ const DocumentSearch = () => {
           {isPending && <CircularProgress />}
         </Stack>
       )}
-      {/* TODO: add onclick */}
       {data &&
         data.map(document => (
           <ListItemButton

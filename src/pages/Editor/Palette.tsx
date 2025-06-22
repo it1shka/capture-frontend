@@ -20,6 +20,8 @@ import {
   useEditorStateComputedProps,
   useEraseLinesWithConfirmation,
 } from './state'
+import { Route } from '../../routes/editor/$documentId'
+import { useUpdateDocumentMutation } from '../../queries/updateDocument'
 
 const Palette = () => {
   const [openColor, setOpenColor] = useState(false)
@@ -38,8 +40,28 @@ const Palette = () => {
 
   const handleErase = useEraseLinesWithConfirmation()
 
+  const { documentId } = Route.useParams()
+  const { mutate, isPending } = useUpdateDocumentMutation()
+  const { textContent } = useEditorState()
+  const { activeLines } = useEditorStateComputedProps()
+  const handleSave = () => {
+    mutate({
+      id: documentId,
+      textContent,
+      canvasContent: JSON.stringify(activeLines),
+    })
+  }
+
   return (
-    <Stack direction="row" padding={1} gap={1} alignItems="center">
+    <Stack
+      direction="row"
+      padding={1}
+      gap={1}
+      alignItems="center"
+      sx={{
+        overflowX: 'scroll',
+      }}
+    >
       <FormControl size="small" sx={{ minWidth: 120 }}>
         <InputLabel id="tool-label">Tool</InputLabel>
         <Select
@@ -145,6 +167,10 @@ const Palette = () => {
           Erase
         </Button>
       </Tooltip>
+
+      <Button variant="contained" onClick={handleSave} loading={isPending}>
+        Save Document
+      </Button>
     </Stack>
   )
 }
