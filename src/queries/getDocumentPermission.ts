@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
-import { QueryKey } from "./queryKeys"
-import { apiClient } from "./apiClient"
+import { QueryKey } from './queryKeys'
+import { apiClient } from './apiClient'
 
 const roleEnum = z.enum(['AUTHOR', 'EDITOR', 'VIEWER'])
 

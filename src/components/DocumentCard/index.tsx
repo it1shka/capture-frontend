@@ -13,7 +13,8 @@ import { formatDate } from '../../lib'
 import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
 
 const DocumentCard = ({ document }: DocumentCardProps) => {
-  const { data: permission, isPending: isPermissionPending } = useGetDocumentPermissionQuery(document.id)
+  const { data: permission, isPending: isPermissionPending } =
+    useGetDocumentPermissionQuery(document.id)
 
   const getPermissionChipColor = (permission: string) => {
     switch (permission) {
@@ -44,7 +45,14 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
       }}
     >
       <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            mb: 1,
+          }}
+        >
           <Typography
             variant="h6"
             component="div"
