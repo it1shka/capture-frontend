@@ -5,12 +5,31 @@ import {
   Box,
   CardActions,
   Button,
+  Chip,
 } from '@mui/material'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import type { DocumentCardProps } from './types'
 import { formatDate } from '../../lib'
+import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
+import RouterLink from '../RouterLink'
 
 const DocumentCard = ({ document }: DocumentCardProps) => {
+  const { data: permission, isPending: isPermissionPending } =
+    useGetDocumentPermissionQuery(document.id)
+
+  const getPermissionChipColor = (permission: string) => {
+    switch (permission) {
+      case 'AUTHOR':
+        return 'info'
+      case 'EDITOR':
+        return 'warning'
+      case 'VIEWER':
+        return 'secondary'
+      default:
+        return 'default'
+    }
+  }
+
   return (
     <Card
       variant="outlined"
@@ -27,13 +46,30 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
       }}
     >
       <CardContent>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            mb: 1,
+          }}
         >
-          {document.title}
-        </Typography>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ textOverflow: 'ellipsis', overflow: 'hidden', flex: 1 }}
+          >
+            {document.title}
+          </Typography>
+          {permission && !isPermissionPending && (
+            <Chip
+              label={permission.toLowerCase()}
+              color={getPermissionChipColor(permission)}
+              size="small"
+              sx={{ ml: 1, textTransform: 'capitalize' }}
+            />
+          )}
+        </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 'auto' }}>
           <AccessTimeIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
           <Typography variant="caption" color="text.secondary">
@@ -49,7 +85,9 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
       </CardContent>
 
       <CardActions className="card-actions">
-        <Button>Edit</Button>
+        <Button LinkComponent={RouterLink} href={`/editor/${document.id}`}>
+          Edit
+        </Button>
         <Button color="error">Delete</Button>
       </CardActions>
     </Card>

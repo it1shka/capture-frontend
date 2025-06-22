@@ -17,6 +17,7 @@ import DescriptionIcon from '@mui/icons-material/Description'
 import { useSideMenuState } from './state'
 import { useDebounce } from '../../lib'
 import { useGetDocumentsQuery } from '../../queries/getDocuments'
+import RouterLink from '../RouterLink'
 
 const SEARCH_DEBOUNCE = 300
 const SEARCH_SIZE = 5
@@ -75,10 +76,13 @@ const DocumentSearch = () => {
           {isPending && <CircularProgress />}
         </Stack>
       )}
-      {/* TODO: add onclick */}
       {data &&
         data.map(document => (
-          <ListItemButton key={document.id}>
+          <ListItemButton
+            LinkComponent={RouterLink}
+            key={document.id}
+            href={`/editor/${document.id}`}
+          >
             <ListItemIcon>
               <DescriptionIcon />
             </ListItemIcon>

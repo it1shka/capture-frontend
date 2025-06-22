@@ -7,7 +7,6 @@ interface CreateDocumentMutationProps {
   description?: string
 }
 
-// TODO:
 export const useCreateDocumentMutation = () => {
   const queryClient = useQueryClient()
 
@@ -15,9 +14,6 @@ export const useCreateDocumentMutation = () => {
     mutationKey: [QueryKey.CREATE_DOCUMENT],
     mutationFn: async (params: CreateDocumentMutationProps) => {
       const response = await apiClient.post('/document', params)
-      // TODO:
-      console.log(response.data)
-
       return response.data
     },
     onSuccess: () => {

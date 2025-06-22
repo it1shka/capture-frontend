@@ -26,6 +26,7 @@ interface EditorActions {
   setTool: (newTool: Tool) => void
   addLine: (newLine: Line) => void
   updateLine: (updatedLine: Line) => void
+  setLines: (lines: Line[]) => void
   eraseLines: () => void
   undoLine: () => void
   redoLine: () => void
@@ -113,6 +114,14 @@ export const useEditorState = create<EditorState>(set => ({
     set(prev => ({
       ...prev,
       historyPointer: Math.min(prev.history.length, prev.historyPointer + 1),
+    }))
+  },
+
+  setLines: lines => {
+    set(prev => ({
+      ...prev,
+      history: lines,
+      historyPointer: lines.length,
     }))
   },
 }))
