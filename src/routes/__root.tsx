@@ -5,9 +5,12 @@ import Appbar from '../components/Appbar'
 import SideMenu from '../components/SideMenu'
 import NewDocumentForm from '../components/NewDocumentForm'
 import ConfirmDialog from '../components/ConfirmDialog'
+import { useApiClientTokenSync } from '../queries/apiClient'
 
 export const Route = createRootRoute({
   component: () => {
+    useApiClientTokenSync()
+
     return (
       <>
         <SideMenu />
