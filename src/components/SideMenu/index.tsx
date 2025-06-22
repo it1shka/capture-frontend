@@ -14,13 +14,23 @@ import RouterLink from '../RouterLink'
 import { useNewDocumentFormState } from '../NewDocumentForm/state'
 import DocumentSearch from './DocumentSearch'
 import LogoutButton from './LogoutButton'
+import { useMatches } from '@tanstack/react-router'
+import DocumentWidget from './DocumentWidget'
 
 const SideMenu = () => {
   const { isOpen, closeMenu } = useSideMenuState()
   const openNewDocumentForm = useNewDocumentFormState(state => state.openForm)
 
+  const matches = useMatches()
+  const editorMatch = matches.find(
+    entry => entry.routeId === '/editor/$documentId',
+  )
+
   return (
     <Drawer anchor="left" open={isOpen} onClose={closeMenu}>
+      {editorMatch !== undefined && (
+        <DocumentWidget documentId={editorMatch.params.documentId} />
+      )}
       <List
         component="nav"
         sx={{ width: 260, bgcolor: 'background.paper' }}
