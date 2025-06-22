@@ -11,6 +11,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import type { DocumentCardProps } from './types'
 import { formatDate } from '../../lib'
 import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
+import RouterLink from '../RouterLink'
 
 const DocumentCard = ({ document }: DocumentCardProps) => {
   const { data: permission, isPending: isPermissionPending } =
@@ -84,7 +85,9 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
       </CardContent>
 
       <CardActions className="card-actions">
-        <Button>Edit</Button>
+        <Button LinkComponent={RouterLink} href={`/editor/${document.id}`}>
+          Edit
+        </Button>
         <Button color="error">Delete</Button>
       </CardActions>
     </Card>

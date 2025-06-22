@@ -11,20 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as EditorImport } from './routes/editor'
 import { Route as IndexImport } from './routes/index'
+import { Route as EditorDocumentIdImport } from './routes/editor/$documentId'
 
 // Create/Update Routes
-
-const EditorRoute = EditorImport.update({
-  id: '/editor',
-  path: '/editor',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EditorDocumentIdRoute = EditorDocumentIdImport.update({
+  id: '/editor/$documentId',
+  path: '/editor/$documentId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,11 +39,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/editor': {
-      id: '/editor'
-      path: '/editor'
-      fullPath: '/editor'
-      preLoaderRoute: typeof EditorImport
+    '/editor/$documentId': {
+      id: '/editor/$documentId'
+      path: '/editor/$documentId'
+      fullPath: '/editor/$documentId'
+      preLoaderRoute: typeof EditorDocumentIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -53,37 +53,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/editor': typeof EditorRoute
+  '/editor/$documentId': typeof EditorDocumentIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/editor': typeof EditorRoute
+  '/editor/$documentId': typeof EditorDocumentIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/editor': typeof EditorRoute
+  '/editor/$documentId': typeof EditorDocumentIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/editor'
+  fullPaths: '/' | '/editor/$documentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/editor'
-  id: '__root__' | '/' | '/editor'
+  to: '/' | '/editor/$documentId'
+  id: '__root__' | '/' | '/editor/$documentId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  EditorRoute: typeof EditorRoute
+  EditorDocumentIdRoute: typeof EditorDocumentIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  EditorRoute: EditorRoute,
+  EditorDocumentIdRoute: EditorDocumentIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,14 +97,14 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/editor"
+        "/editor/$documentId"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/editor": {
-      "filePath": "editor.tsx"
+    "/editor/$documentId": {
+      "filePath": "editor/$documentId.tsx"
     }
   }
 }
