@@ -52,3 +52,13 @@ export const formatDate = (dateString: string) => {
     minute: '2-digit',
   })
 }
+
+export const canEdit = (
+  permission: unknown,
+): permission is 'AUTHOR' | 'EDITOR' => {
+  return permission === 'AUTHOR' || permission === 'EDITOR'
+}
+
+export const canDelete = (permission: unknown): permission is 'AUTHOR' => {
+  return permission === 'AUTHOR'
+}

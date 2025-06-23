@@ -22,6 +22,8 @@ import {
 } from './state'
 import { Route } from '../../routes/editor/$documentId'
 import { useUpdateDocumentMutation } from '../../queries/updateDocument'
+import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
+import { canEdit } from '../../lib'
 
 const Palette = () => {
   const [openColor, setOpenColor] = useState(false)
@@ -52,6 +54,9 @@ const Palette = () => {
     })
   }
 
+  const { data: permission } = useGetDocumentPermissionQuery(documentId)
+  const editionEnabled = canEdit(permission)
+
   return (
     <Stack
       direction="row"
@@ -65,6 +70,7 @@ const Palette = () => {
       <FormControl size="small" sx={{ minWidth: 120 }}>
         <InputLabel id="tool-label">Tool</InputLabel>
         <Select
+          disabled={!editionEnabled}
           labelId="tool-label"
           label="Tool"
           value={tool}
@@ -81,6 +87,7 @@ const Palette = () => {
       <FormControl size="small" sx={{ minWidth: 120 }}>
         <InputLabel id="stroke-width-label">Width</InputLabel>
         <Select
+          disabled={!editionEnabled}
           labelId="stroke-width-label"
           label="Width"
           value={strokeWidth}
@@ -100,6 +107,7 @@ const Palette = () => {
 
       <Box position="relative">
         <Button
+          disabled={!editionEnabled}
           onClick={() => {
             setOpenColor(prev => !prev)
           }}
@@ -139,7 +147,7 @@ const Palette = () => {
         <Button
           onClick={undoLine}
           variant="outlined"
-          disabled={!canUndo}
+          disabled={!canUndo || !editionEnabled}
           endIcon={<UndoIcon />}
         >
           Undo
@@ -150,7 +158,7 @@ const Palette = () => {
         <Button
           onClick={redoLine}
           variant="outlined"
-          disabled={!canRedo}
+          disabled={!canRedo || !editionEnabled}
           endIcon={<RedoIcon />}
         >
           Redo
@@ -159,6 +167,7 @@ const Palette = () => {
 
       <Tooltip title="Ctrl+X">
         <Button
+          disabled={!editionEnabled}
           onClick={handleErase}
           variant="outlined"
           color="error"
@@ -168,8 +177,13 @@ const Palette = () => {
         </Button>
       </Tooltip>
 
-      <Button variant="contained" onClick={handleSave} loading={isPending}>
-        Save Document
+      <Button
+        disabled={!editionEnabled}
+        variant="contained"
+        onClick={handleSave}
+        loading={isPending}
+      >
+        Save
       </Button>
     </Stack>
   )
