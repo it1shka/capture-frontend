@@ -15,6 +15,7 @@ import { useGenerateTokenMutation } from '../../queries/generateToken'
 import { useTokenDialogState } from '../TokenDialog/state'
 import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
 import { canDelete, canEdit } from '../../lib'
+import { useNotificationSystemStore } from '../NotificationSystem/state'
 
 interface DocumentWidgetProps {
   documentId: string
@@ -30,6 +31,7 @@ const DocumentWidget = ({ documentId }: DocumentWidgetProps) => {
     useGenerateTokenMutation()
 
   const openTokenDialog = useTokenDialogState(store => store.openTokenDialog)
+  const pushNotification = useNotificationSystemStore(store => store.push)
 
   const handleGenerateToken = (role: 'EDITOR' | 'VIEWER') => {
     if (document === undefined) {
@@ -38,7 +40,16 @@ const DocumentWidget = ({ documentId }: DocumentWidgetProps) => {
     generateToken({
       documentId: document.id,
       accessLevel: role,
-    }).then(openTokenDialog)
+    })
+      .then(token => {
+        openTokenDialog(token)
+      })
+      .catch(() => {
+        pushNotification({
+          severity: 'error',
+          message: 'Failed to generate access token',
+        })
+      })
   }
 
   return (

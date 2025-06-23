@@ -9,15 +9,22 @@ import {
   TextField,
 } from '@mui/material'
 import { useTokenDialogState } from './state'
+import { useNotificationSystemStore } from '../NotificationSystem/state'
 
 const TokenDialog = () => {
   const { isOpen, token, closeTokenDialog } = useTokenDialogState()
+
+  const pushNotification = useNotificationSystemStore(store => store.push)
 
   const handleCopy = () => {
     if (token === null) {
       return
     }
     navigator.clipboard.writeText(token)
+    pushNotification({
+      severity: 'info',
+      message: 'Access token copied to clipboard',
+    })
   }
 
   return (
