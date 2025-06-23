@@ -6,4 +6,5 @@ export const enum QueryKey {
   UPDATE_DOCUMENT = 'update-document',
   DELETE_DOCUMENT = 'delete-document',
   GENERATE_TOKEN = 'generate-token',
+  ACTIVATE_TOKEN = 'activate-token',
 }
