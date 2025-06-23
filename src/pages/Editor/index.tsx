@@ -13,7 +13,6 @@ const EditorPage = () => {
   const { documentId } = Route.useParams()
 
   const { data: document, isPending } = useGetDocumentQuery(documentId)
-
   const { setTextContent, setLines } = useEditorState()
   useEffect(() => {
     if (document === undefined) {
@@ -31,6 +30,11 @@ const EditorPage = () => {
       }
     } else {
       setLines([])
+    }
+
+    // A hack
+    return () => {
+      setTextContent('')
     }
   }, [document])
 
