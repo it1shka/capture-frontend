@@ -13,7 +13,7 @@ import { useDebounce } from '../../lib'
 import { useEffect } from 'react'
 
 const SEARCH_DEBOUNCE = 300
-const PAGE_SIZE = 8
+const PAGE_SIZE = 20
 
 const GeneralList = () => {
   const { search, pages, fetchMore, resetPages } = useMenuState()

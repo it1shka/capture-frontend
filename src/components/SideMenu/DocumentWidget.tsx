@@ -13,6 +13,8 @@ import KeyIcon from '@mui/icons-material/Key'
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle'
 import { useGenerateTokenMutation } from '../../queries/generateToken'
 import { useTokenDialogState } from '../TokenDialog/state'
+import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
+import { canDelete, canEdit } from '../../lib'
 
 interface DocumentWidgetProps {
   documentId: string
@@ -20,6 +22,9 @@ interface DocumentWidgetProps {
 
 const DocumentWidget = ({ documentId }: DocumentWidgetProps) => {
   const { data: document, isPending } = useGetDocumentQuery(documentId)
+  const { data: permission } = useGetDocumentPermissionQuery(documentId)
+  const deletionEnabled = canDelete(permission)
+  const editionEnabled = canEdit(permission)
 
   const { mutateAsync: generateToken, isPending: tokenPending } =
     useGenerateTokenMutation()
@@ -52,30 +57,36 @@ const DocumentWidget = ({ documentId }: DocumentWidgetProps) => {
           </>
         )}
       </Stack>
-      <ListItemButton>
-        <ListItemIcon>
-          <ChangeCircleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Rename" />
-      </ListItemButton>
-      <ListItemButton
-        onClick={() => handleGenerateToken('VIEWER')}
-        disabled={isPending || tokenPending}
-      >
-        <ListItemIcon>
-          <KeyIcon />
-        </ListItemIcon>
-        <ListItemText primary="Generate viewer token" />
-      </ListItemButton>
-      <ListItemButton
-        onClick={() => handleGenerateToken('EDITOR')}
-        disabled={isPending || tokenPending}
-      >
-        <ListItemIcon>
-          <KeyIcon />
-        </ListItemIcon>
-        <ListItemText primary="Generate editor token" />
-      </ListItemButton>
+      {editionEnabled && (
+        <ListItemButton>
+          <ListItemIcon>
+            <ChangeCircleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Rename" />
+        </ListItemButton>
+      )}
+      {deletionEnabled && (
+        <ListItemButton
+          onClick={() => handleGenerateToken('VIEWER')}
+          disabled={isPending || tokenPending}
+        >
+          <ListItemIcon>
+            <KeyIcon />
+          </ListItemIcon>
+          <ListItemText primary="Generate viewer token" />
+        </ListItemButton>
+      )}
+      {deletionEnabled && (
+        <ListItemButton
+          onClick={() => handleGenerateToken('EDITOR')}
+          disabled={isPending || tokenPending}
+        >
+          <ListItemIcon>
+            <KeyIcon />
+          </ListItemIcon>
+          <ListItemText primary="Generate editor token" />
+        </ListItemButton>
+      )}
     </List>
   )
 }

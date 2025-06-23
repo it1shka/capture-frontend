@@ -8,8 +8,15 @@ import {
   useEraseLinesWithConfirmation,
 } from './state'
 import KeyListener from '../../components/KeyListener'
+import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
+import { Route } from '../../routes/editor/$documentId'
+import { canEdit } from '../../lib'
 
 const VisualCanvas = () => {
+  const { documentId } = Route.useParams()
+  const { data: permission } = useGetDocumentPermissionQuery(documentId)
+  const editionEnabled = canEdit(permission)
+
   const {
     brushColor,
     strokeWidth,
@@ -24,6 +31,9 @@ const VisualCanvas = () => {
   const isDrawing = useRef(false)
 
   const handleMouseDown = (event: Konva.KonvaEventObject<MouseEvent>) => {
+    if (!editionEnabled) {
+      return
+    }
     const stage = event.target.getStage()
     if (stage === null) {
       return
