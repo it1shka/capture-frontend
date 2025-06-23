@@ -183,7 +183,7 @@ const Palette = () => {
         onClick={handleSave}
         loading={isPending}
       >
-        Save Document
+        Save
       </Button>
     </Stack>
   )
