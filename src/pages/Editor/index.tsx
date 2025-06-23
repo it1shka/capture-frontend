@@ -1,18 +1,20 @@
 import Editor from './Editor'
 import { Route } from '../../routes/editor/$documentId'
-import { useGetDocumentQuery } from '../../queries/getDocument'
+// import { useGetDocumentQuery } from '../../queries/getDocument'
 import { Alert, CircularProgress, Stack } from '@mui/material'
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useEditorState } from './state'
 import { lineSchema } from '../../queries/documentSchema'
+import { useGetDocumentPollingQuery } from '../../queries/getDocumentPolling'
 
 const linesSchema = z.array(lineSchema)
 
 const EditorPage = () => {
   const { documentId } = Route.useParams()
 
-  const { data: document, isPending } = useGetDocumentQuery(documentId)
+  // const { data: document, isPending } = useGetDocumentQuery(documentId)
+  const { data: document, isPending } = useGetDocumentPollingQuery(documentId)
   const { setTextContent, setLines } = useEditorState()
   useEffect(() => {
     if (document === undefined) {
