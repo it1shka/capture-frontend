@@ -75,7 +75,7 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
           <Typography
             variant="h6"
             component="div"
-            sx={{ textOverflow: 'ellipsis', overflow: 'hidden', flex: 1 }}
+            sx={{ textOverflow: 'ellipsis', overflow: 'hidden', flex: 1, whiteSpace: 'nowrap' }}
           >
             {document.title}
           </Typography>
@@ -96,7 +96,7 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
         </Box>
         <Typography
           variant="body2"
-          sx={{ textOverflow: 'ellipsis', overflow: 'hidden', maxHeight: 20 }}
+          sx={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
         >
           {document.description || 'No description'}
         </Typography>
