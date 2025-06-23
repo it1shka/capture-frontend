@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import type { DocumentCardProps } from './types'
-import { formatDate } from '../../lib'
+import { canDelete, canEdit, formatDate } from '../../lib'
 import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
 import RouterLink from '../RouterLink'
 import { useDeleteDocumentMutation } from '../../queries/deleteDocument'
@@ -127,14 +127,14 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
 
       <CardActions className="card-actions">
         <Button LinkComponent={RouterLink} href={`/editor/${document.id}`}>
-          Edit
+          {canEdit(permission) ? 'Edit' : 'View'}
         </Button>
         <Button
           color="error"
           loading={isPending}
           onClick={handleCarefullyDelete}
         >
-          Delete
+          {canDelete(permission) ? 'Delete' : 'Leave'}
         </Button>
       </CardActions>
     </Card>
