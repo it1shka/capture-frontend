@@ -14,6 +14,7 @@ import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermissi
 import RouterLink from '../RouterLink'
 import { useDeleteDocumentMutation } from '../../queries/deleteDocument'
 import { useConfirmDialogState } from '../ConfirmDialog/state'
+import { useNotificationSystemStore } from '../NotificationSystem/state'
 
 const DocumentCard = ({ document }: DocumentCardProps) => {
   const { data: permission, isPending: isPermissionPending } =
@@ -32,9 +33,22 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
     }
   }
 
-  const { mutate, isPending } = useDeleteDocumentMutation()
+  const { mutateAsync, isPending } = useDeleteDocumentMutation()
+  const pushNotification = useNotificationSystemStore(store => store.push)
   const handleDelete = () => {
-    mutate(document.id)
+    mutateAsync(document.id)
+      .then(() => {
+        pushNotification({
+          severity: 'success',
+          message: 'Deleted the document',
+        })
+      })
+      .catch(() => {
+        pushNotification({
+          severity: 'error',
+          message: 'Failed to delete a document',
+        })
+      })
   }
 
   const openConfirmDialog = useConfirmDialogState(
