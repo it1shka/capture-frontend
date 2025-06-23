@@ -8,6 +8,7 @@ import ConfirmDialog from '../components/ConfirmDialog'
 import { useApiClientTokenSync } from '../queries/apiClient'
 import TokenDialog from '../components/TokenDialog'
 import ActivateTokenDialog from '../components/ActivateTokenDialog'
+import NotificationSystem from '../components/NotificationSystem'
 
 export const Route = createRootRoute({
   component: () => {
@@ -16,6 +17,7 @@ export const Route = createRootRoute({
     return (
       <>
         <SideMenu />
+        <NotificationSystem />
         <ConfirmDialog />
         <TokenDialog />
         <ActivateTokenDialog />

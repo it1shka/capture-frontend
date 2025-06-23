@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { useForm } from '@tanstack/react-form'
 import { useCreateDocumentMutation } from '../../queries/createDocument'
 import { useNewDocumentFormState } from './state'
+import { useNotificationSystemStore } from '../NotificationSystem/state'
 
 interface NewDocumentFormData {
   documentName: string
@@ -29,6 +30,8 @@ export const useNewDocumentForm = () => {
   const { mutateAsync } = useCreateDocumentMutation()
   const closeForm = useNewDocumentFormState(store => store.closeForm)
 
+  const pushNotification = useNotificationSystemStore(store => store.push)
+
   const form = useForm({
     defaultValues,
     validators: {
@@ -43,8 +46,15 @@ export const useNewDocumentForm = () => {
         })
         form.reset()
         closeForm()
+        pushNotification({
+          severity: 'success',
+          message: 'Created a new document',
+        })
       } catch {
-        // TODO:
+        pushNotification({
+          severity: 'error',
+          message: 'Failed to create a document',
+        })
       }
     },
   })

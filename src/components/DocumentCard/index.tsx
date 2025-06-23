@@ -9,11 +9,12 @@ import {
 } from '@mui/material'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import type { DocumentCardProps } from './types'
-import { formatDate } from '../../lib'
+import { canDelete, canEdit, formatDate } from '../../lib'
 import { useGetDocumentPermissionQuery } from '../../queries/getDocumentPermission'
 import RouterLink from '../RouterLink'
 import { useDeleteDocumentMutation } from '../../queries/deleteDocument'
 import { useConfirmDialogState } from '../ConfirmDialog/state'
+import { useNotificationSystemStore } from '../NotificationSystem/state'
 
 const DocumentCard = ({ document }: DocumentCardProps) => {
   const { data: permission, isPending: isPermissionPending } =
@@ -32,9 +33,22 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
     }
   }
 
-  const { mutate, isPending } = useDeleteDocumentMutation()
+  const { mutateAsync, isPending } = useDeleteDocumentMutation()
+  const pushNotification = useNotificationSystemStore(store => store.push)
   const handleDelete = () => {
-    mutate(document.id)
+    mutateAsync(document.id)
+      .then(() => {
+        pushNotification({
+          severity: 'success',
+          message: 'Deleted the document',
+        })
+      })
+      .catch(() => {
+        pushNotification({
+          severity: 'error',
+          message: 'Failed to delete a document',
+        })
+      })
   }
 
   const openConfirmDialog = useConfirmDialogState(
@@ -75,7 +89,12 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
           <Typography
             variant="h6"
             component="div"
-            sx={{ textOverflow: 'ellipsis', overflow: 'hidden', flex: 1 }}
+            sx={{
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              flex: 1,
+              whiteSpace: 'nowrap',
+            }}
           >
             {document.title}
           </Typography>
@@ -96,7 +115,11 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
         </Box>
         <Typography
           variant="body2"
-          sx={{ textOverflow: 'ellipsis', overflow: 'hidden', maxHeight: 20 }}
+          sx={{
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+          }}
         >
           {document.description || 'No description'}
         </Typography>
@@ -104,14 +127,14 @@ const DocumentCard = ({ document }: DocumentCardProps) => {
 
       <CardActions className="card-actions">
         <Button LinkComponent={RouterLink} href={`/editor/${document.id}`}>
-          Edit
+          {canEdit(permission) ? 'Edit' : 'View'}
         </Button>
         <Button
           color="error"
           loading={isPending}
           onClick={handleCarefullyDelete}
         >
-          Delete
+          {canDelete(permission) ? 'Delete' : 'Leave'}
         </Button>
       </CardActions>
     </Card>

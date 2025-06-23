@@ -51,25 +51,24 @@ const GeneralList = () => {
         flex: 1,
       }}
     >
-      <Grid
+      <Box
         sx={{
           position: 'absolute',
           inset: 0,
           overflow: 'scroll',
         }}
-        mt={1}
-        container
-        spacing={1}
       >
-        {data.map(document => (
-          <Grid key={document.id} size={3}>
-            <DocumentCard document={document} />
+        <Grid mt={1} container spacing={1}>
+          {data.map(document => (
+            <Grid key={document.id} size={3}>
+              <DocumentCard document={document} />
+            </Grid>
+          ))}
+          <Grid size={3}>
+            <Button onClick={fetchMore}>More</Button>
           </Grid>
-        ))}
-        <Grid size={3}>
-          <Button onClick={fetchMore}>More</Button>
         </Grid>
-      </Grid>
+      </Box>
     </Box>
   )
 }
